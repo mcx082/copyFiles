@@ -4,7 +4,7 @@
       "name": "myBlobXML",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "testblobcontainer1/testfolder1/{name}",
+      "path": "testblobcontainer1/testfolder1/{name}.xml",
       "connection": "AzureWebJobsStorage"
     }
   ]

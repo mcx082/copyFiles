@@ -1,0 +1,11 @@
+{
+  "bindings": [
+    {
+      "name": "myBlobXML",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "testblobcontainer1/testfolder1/{name}",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}

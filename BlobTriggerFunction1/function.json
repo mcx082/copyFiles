@@ -6,6 +6,17 @@
       "direction": "in",
       "path": "testblobcontainer1/testfolder1/{name}.xml",
       "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "outputDocument",
+      "databaseName": "copyfilesdb",
+      "collectionName": "mycontainer1",
+      "createIfNotExists": false,
+      "connectionStringSetting": "CosmosDbConnStr",
+      "partitionKey": "",
+      "collectionThroughput": ""
     }
   ]
 }

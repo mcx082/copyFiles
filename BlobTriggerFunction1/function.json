@@ -4,7 +4,21 @@
       "name": "myBlobXML",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "testblobcontainer1/testfolder1/{name}.xml",
+      "path": "testblobcontainer1/{filename}",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "blob",
+      "direction": "out",
+      "name": "outputBlobWorker1",
+      "path": "worker1/{filename}",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "blob",
+      "direction": "out",
+      "name": "outputBlobWorker2",
+      "path": "worker2/{filename}",
       "connection": "AzureWebJobsStorage"
     },
     {
@@ -12,11 +26,9 @@
       "direction": "out",
       "name": "outputDocument",
       "databaseName": "copyfilesdb",
-      "collectionName": "mycontainer1",
+      "collectionName": "dbcontainer1",
       "createIfNotExists": false,
-      "connectionStringSetting": "CosmosDbConnStr",
-      "partitionKey": "",
-      "collectionThroughput": ""
+      "connectionStringSetting": "CosmosDbConnStr"
     }
   ]
 }

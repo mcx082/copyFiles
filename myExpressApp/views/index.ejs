@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>PGE PoC - copy files</h1>
+    <p>strona infirmacyjna kopiowania plików</p>
+    
+    <div class="table-data">
+      <table border="1">
+        <tr>
+            <th>S.N</th>
+            <th>id</th>
+            <th>uploadDate</th>
+            <th>blobPath</th>
+            <th>fileName</th>
+            <th>MD5</th>
+            <th>appState</th>
+        </tr>
+          <%
+          if(filesdata.length!=0){
+          var i=1;
+          filesdata.forEach(function(data){
+          %>
+          <tr>
+              <td><%=i; %></td>
+              <td><%=data.id %></td>
+              <td><%=data.uploadDate %></td>
+              <td><%=data.blobPath %></td>
+              <td><%=data.fileName %></td>
+              <td><%=data.MD5 %></td>
+              <td><%=data.appState %></td>
+            </tr>
+          <%  i++; }) %>
+          <% } else{ %>
+              <tr>
+                  <td colspan="7">No Data Found</td>
+              </tr>
+          <% } %>
+      </table>
+    </div>
+
+  </body>
+</html>

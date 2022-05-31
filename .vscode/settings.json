@@ -4,5 +4,7 @@
     "azureFunctions.projectLanguage": "JavaScript",
     "azureFunctions.projectRuntime": "~3",
     "debug.internalConsoleOptions": "neverOpen",
-    "azureFunctions.preDeployTask": "npm prune (functions)"
+    "azureFunctions.preDeployTask": "npm prune (functions)",
+    "appService.defaultWebAppToDeploy": "/subscriptions/23813156-6f55-4a38-bf69-f79cb9c7eb58/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/copyfileswebapp",
+    "appService.deploySubpath": "."
 }

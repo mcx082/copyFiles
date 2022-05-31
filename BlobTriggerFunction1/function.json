@@ -29,6 +29,13 @@
       "collectionName": "dbcontainer1",
       "createIfNotExists": false,
       "connectionStringSetting": "CosmosDbConnStr"
+    },
+    {
+      "type": "queue",
+      "direction": "out",
+      "name": "myQueueWorker1",
+      "queueName": "queueWorker1",
+      "connection": "AzureWebJobsStorage"
     }
   ]
 }

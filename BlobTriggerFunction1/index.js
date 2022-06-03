@@ -1,13 +1,14 @@
 const Client = require('ssh2-sftp-client');
+const { BlobServiceClient } = require("@azure/storage-blob");
 const {BlobNameAndPath} = require('../SharedCode/BlobData.js');
 const BlobMetaData = require('../SharedCode/BlobMetaDataFile.js');
-
+const inBlobContainer = "testblobcontainer1";
 
 module.exports = async function (context, myBlobXML) {
     //context.log("JavaScript blob XML trigger function processed blob \n Blob:", context.bindingData.blobTrigger);
 
     getBlobNameAndPath(context.bindingData.blobTrigger.toString());
-    var blobMetaData = new BlobMetaData(
+    var InBlobMetaData = new BlobMetaData(
         getGUID(),
         new Date().toISOString(),
         context.bindingData.blobTrigger.toString(),
@@ -38,67 +39,46 @@ module.exports = async function (context, myBlobXML) {
     //context.log("My Blob:\n", JSON.stringify(blobMetaData) );
     //context.bindings.myQueueWorker1 = JSON.stringify(blobMetaData);
 
-  
-    copyBlob(context, blobMetaData);
-    wrtiteToDB(context, blobMetaData);
-
-/*
-
-     let client = new Client();
-
-     const config = {
-        host: 'ftpstoragemcx.blob.core.windows.net',
-        port: 22,
-        username: 'ftpstoragemcx.remoteftp.marek',
-        password: 'XT7/VvTqSGY8Xjz2t63ebxZeIXg3ATnshYxrcGq9B0w73CSFwShWop6kNemg9JdNN5vmEg2GL1nJl4kFnyEm5Q=='
-      };
-
-    let data = context.bindings.myBlobXML;;
-    let remote = '/'+blobMetaData.fileName;
-     
-    client.connect(config)
-       .then(() => {
-        //console.log("wysyłam..");
-         return client.put(data, remote);
-       })
-       .then(() => {
-        //console.log("jest PUT");
-         return client.end();
-       })
-       .catch(err => {
-        console.log(err.message);
-       });
-       context.log("Sended to sftp");
-*/
-
+    wrtiteToDB(context, InBlobMetaData);
+    copyBlob(context, InBlobMetaData);
+    
 };
 
 //******************************* */
 // FUCTIONS
 
 function getBlobNameAndPath(blobURI){
-    let index = blobURI.lastIndexOf("/");
-    BlobNameAndPath.path = blobURI.substring(0,index);
-    BlobNameAndPath.name = blobURI.substring(index + 1);
-};
-/*
-function getWorkerPath (blobURI){
-    let index = blobURI.lastIndexOf("/");
-    return blobURI.substring(0,index);
-};
+    let indexFirst = blobURI.indexOf("/");
+    let indexLast = blobURI.lastIndexOf("/");
 
-function getFileName (blobURI){
-    let index = blobURI.lastIndexOf("/");
-    return blobURI.substring(index + 1);
+    BlobNameAndPath.path = blobURI.substring(indexFirst,indexLast);
+    BlobNameAndPath.name = blobURI.substring(indexLast + 1);
 };
-*/
 
 function copyBlob(context, blobMetaData){
+    var OutBlobMetaData = new BlobMetaData(
+        blobMetaData.id,
+        new Date().toISOString(),
+        "",
+        BlobNameAndPath.path,
+        BlobNameAndPath.name,
+        "something",
+        blobMetaData.MD5,
+        "blob moved",
+        blobMetaData.blobFileName,
+        ""
+    );
+
     if (blobMetaData.workerPath.endsWith("testfolder1")){    
         context.bindings.outputBlobWorker1 = context.bindings.myBlobXML;
         context.log("blob mooved to testfolder1");
         context.bindings.myQueueWorker1 = blobMetaData.blobFileName; //JSON.stringify(blobMetaData);
-        context.log("blob file name sended to queue: ", blobMetaData.blobFileName)
+        context.log("blob file name sended to queue: ", blobMetaData.blobFileName);
+        deleteBlob(inBlobContainer, blobMetaData.blobFileName);
+        OutBlobMetaData.blobPath = `worker1${BlobNameAndPath.path}/${BlobNameAndPath.name}`;
+        OutBlobMetaData.blobUri = `https://storageaccountmarekvpn.blob.core.windows.net/${OutBlobMetaData.blobPath}`
+        wrtiteToDB(context, OutBlobMetaData);
+
     } else if (blobMetaData.workerPath.endsWith("testfolder2")) {
         context.bindings.outputBlobWorker2 = context.bindings.myBlobXML;
         context.log("blob mooved to testfolder2");
@@ -106,6 +86,15 @@ function copyBlob(context, blobMetaData){
         context.log("found nothing, blob no mooved");
     }
 };
+
+function deleteBlob(containerName, blobFileName){
+    const connString = process.env.AzureWebJobsStorage;
+    if (!connString) throw Error('Azure Storage Connection string not found');
+  
+    const blobServiceClient = BlobServiceClient.fromConnectionString(connString);
+    blobServiceClient.getContainerClient(containerName).getBlobClient(blobFileName).deleteIfExists();
+    console.log("Input Blob deleted: " + blobFileName);
+}
 
 function wrtiteToDB (context, blobMetaData){
     context.bindings.outputDocument = JSON.stringify(blobMetaData);

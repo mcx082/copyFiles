@@ -1,0 +1,11 @@
+{
+  "bindings": [
+    {
+      "name": "myQueueItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "queueworker1ftp",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ const BlobMetaData = require('../SharedCode/BlobMetaDataFile.js');
 
 
 module.exports = async function (context, myBlobXML) {
-    context.log("JavaScript blob XML trigger function processed blob \n Blob:", context.bindingData.blobTrigger);
+    //context.log("JavaScript blob XML trigger function processed blob \n Blob:", context.bindingData.blobTrigger);
 
     getBlobNameAndPath(context.bindingData.blobTrigger.toString());
     var blobMetaData = new BlobMetaData(
@@ -35,7 +35,7 @@ module.exports = async function (context, myBlobXML) {
     
     
 
-    context.log("My Blob:\n", JSON.stringify(blobMetaData) );
+    //context.log("My Blob:\n", JSON.stringify(blobMetaData) );
     //context.bindings.myQueueWorker1 = JSON.stringify(blobMetaData);
 
   
@@ -98,7 +98,7 @@ function copyBlob(context, blobMetaData){
         context.bindings.outputBlobWorker1 = context.bindings.myBlobXML;
         context.log("blob mooved to testfolder1");
         context.bindings.myQueueWorker1 = blobMetaData.blobFileName; //JSON.stringify(blobMetaData);
-        context.log("do kolejki: ", blobMetaData.blobFileName)
+        context.log("blob file name sended to queue: ", blobMetaData.blobFileName)
     } else if (blobMetaData.workerPath.endsWith("testfolder2")) {
         context.bindings.outputBlobWorker2 = context.bindings.myBlobXML;
         context.log("blob mooved to testfolder2");

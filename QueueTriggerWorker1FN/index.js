@@ -14,9 +14,32 @@ const client = new CosmosClient(cosmosDbConnStr);
 const container = client.database("copyfilesdb").container("dbcontainer1");
 
 module.exports = async function (context, myQueueWorker1) {
-    const { resources: itemArray } = await container.items.readAll().fetchAll();
-    context.log(itemArray);
-    
+
+    context.log("Starting function QueueTrigerWorker1FN");
+    context.log("Passed parameter: " + myQueueWorker1);
+
+    var sqlSelect = "SELECT * FROM c where c.blobFileName = ";
+    var sqlParam = "'"+myQueueWorker1+"'"; //'testblobcontainer1/testfolder2/JpkSession_2016-08-19_12-05-57_.xml' \
+    var sqlOrder = "ORDER BY c.uploadDate desc OFFSET 0 LIMIT 1";
+    var sqlQuery = sqlSelect.concat(sqlParam.concat(sqlOrder))
+
+    const querySpec = {
+        query: sqlQuery
+      };
+
+    //context.log("SQL query: " + JSON.stringify(querySpec));
+
+    const { resources: itemArray } = await container.items.query(querySpec).fetchAll();   //readAll().fetchAll();
+    //context.log("zapytanie sql: " + JSON.stringify(itemArray));
+    var blobFileName;
+    var blobMD5;
+    context.log("Cosmos data:");
+    itemArray.forEach(item => {
+        context.log(`${item.id} - ${item.fileName}`);
+        blobFileName = item.fileName;
+        blobMD5 = item.MD5;
+      });
+
     //context.bindings.inputCopyBlob
 
     //var inputBlobData = JSON.parse(myQueueWorker1);
@@ -24,7 +47,7 @@ module.exports = async function (context, myQueueWorker1) {
     //blobMetaData = inputBlobData;
     //blobMetaData.appState = "blob sended to sftp";
 
-    sentToSFTP(context, "" );
+    sentToSFTP(context, blobFileName );
 
 
 
@@ -54,11 +77,15 @@ function sentToSFTP (context, blobMetaData){
      };
 
      
-
+     //context.bindings.inputCopyBlob.path = 'testblobcontainer1/testfolder2/JpkSession_2016-08-19_12-05-57_.xml';
      var data = context.bindings.inputCopyBlob;
+
+     if (data == null){
+        throw new Error('Blob object data is null or udefined', "Blob: "+ blobMetaData);
+    }
  
     var blobdata = Blob.Buffer.from(data);
-    let remote = "./jakisplik.xml";
+    let remote = "./"+blobMetaData; //"./jakisplik.xml";
     
    client.connect(config)
       .then(() => {

@@ -35,7 +35,7 @@ function sendToSFTPpriv (context, blobMetaData){
     .then(() => {
         
         blobMetaData.appState="blob tranfered to sfpt";
-        blobMetaData.blobUri=`sftp://ftpstoragemcx.blob.core.windows.net/${remoteDir}/${remoteFile}`;
+        blobMetaData.blobUri=`sftp://ftpstoragemcx.blob.core.windows.net${remoteDir}/${remoteFile}`;
         console.log("file sended: "+ blobMetaData.blobUri);
         return client.end();
     })

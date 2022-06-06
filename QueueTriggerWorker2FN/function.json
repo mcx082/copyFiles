@@ -1,0 +1,18 @@
+{
+  "bindings": [
+    {
+      "name": "myQueueWorker2",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "queueworker2",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "blob",
+      "direction": "in",
+      "name": "inputCopyBlob",
+      "path": "worker2/{queueTrigger}",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}

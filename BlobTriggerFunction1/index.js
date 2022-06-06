@@ -82,6 +82,14 @@ function copyBlob(context, blobMetaData){
     } else if (blobMetaData.workerPath.endsWith("testfolder2")) {
         context.bindings.outputBlobWorker2 = context.bindings.myBlobXML;
         context.log("blob mooved to testfolder2");
+
+        context.bindings.myQueueWorker2 = blobMetaData.blobFileName; //JSON.stringify(blobMetaData);
+        context.log("blob file name sended to queue: ", blobMetaData.blobFileName);
+        deleteBlob(inBlobContainer, blobMetaData.blobFileName);
+        OutBlobMetaData.blobPath = `worker2${BlobNameAndPath.path}/${BlobNameAndPath.name}`;
+        OutBlobMetaData.blobUri = `https://storageaccountmarekvpn.blob.core.windows.net/${OutBlobMetaData.blobPath}`
+        wrtiteToDB(context, OutBlobMetaData);
+
     } else {
         context.log("found nothing, blob no mooved");
     }

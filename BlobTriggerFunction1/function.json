@@ -36,6 +36,13 @@
       "name": "myQueueWorker1",
       "queueName": "queueWorker1",
       "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "queue",
+      "direction": "out",
+      "name": "myQueueWorker2",
+      "queueName": "queueWorker2",
+      "connection": "AzureWebJobsStorage"
     }
   ]
 }

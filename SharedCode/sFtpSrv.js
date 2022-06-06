@@ -1,7 +1,7 @@
 const Client = require('ssh2-sftp-client');
 const Blob = require('buffer');
 
-function sendToSFTPpriv (context, blobMetaData){
+async function sendToSFTPpriv (context, blobMetaData){
     //var retunMsg = "";
     let client = new Client();
 
@@ -22,7 +22,7 @@ function sendToSFTPpriv (context, blobMetaData){
     var blobdata = Blob.Buffer.from(data);
     let remoteFile = blobMetaData.fileName; //"./jakisplik.xml";
     var remoteDir = blobMetaData.workerPath;
-    client.connect(sftpConfig)
+    await client.connect(sftpConfig)
     .then(() => {
         console.log("check if remote directory exists...");
         return client.mkdir(remoteDir, true);
@@ -42,11 +42,15 @@ function sendToSFTPpriv (context, blobMetaData){
     .catch(err => {
         console.error(err.message);
     });
+    //await client.end();
+    blobMetaData.id = null;
     return blobMetaData;
 };
 
+
+
 module.exports = {
-    sFtpSend: function sendToSFTP(context, blobMetaData){
-        return sendToSFTPpriv(context, blobMetaData);
+    sFtpSend: async function sendToSFTP(context, blobMetaData){
+        return await sendToSFTPpriv(context, blobMetaData);
     },
 }

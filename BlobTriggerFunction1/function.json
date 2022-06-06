@@ -31,6 +31,15 @@
       "connectionStringSetting": "CosmosDbConnStr"
     },
     {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "outputDocumentDispatch",
+      "databaseName": "copyfilesdb",
+      "collectionName": "dbcontainer1",
+      "createIfNotExists": false,
+      "connectionStringSetting": "CosmosDbConnStr"
+    },
+    {
       "type": "queue",
       "direction": "out",
       "name": "myQueueWorker1",

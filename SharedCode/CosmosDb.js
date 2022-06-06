@@ -44,6 +44,13 @@ async function getDbRecordPriv (cosmosDbConnStr, myQueueWorker){
     return OutBlobMetaData;
 };
 
+async function wrtiteToDbPriv(cosmosDbConnStr, blobMetaData){
+    const dbContainer = getContainerPriv(cosmosDbConnStr);
+    const { resource: createdItem } = await dbContainer.items.create(blobMetaData);
+    var msg = "blob record cerated in CosmosDB";
+    return msg;
+}
+
 module.exports = {
     DbContainer: function getContainer(cosmosDbConnStr){
         container = getContainerPriv(cosmosDbConnStr);
@@ -53,7 +60,10 @@ module.exports = {
         return getDbSelectPriv(myQueueWorker);
     },
     DbRecord: async function getDbRecord(cosmosDbConnStr, myQueueWorker){
-        return getDbRecordPriv (cosmosDbConnStr, myQueueWorker)
+        return getDbRecordPriv (cosmosDbConnStr, myQueueWorker);
+    },
+    DbWrite: async function wrtiteToDb(cosmosDbConnStr, blobMetaData){
+        return wrtiteToDbPriv(cosmosDbConnStr, blobMetaData);
     }
 
 }

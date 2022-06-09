@@ -8,7 +8,7 @@ const inBlobContainer = "testblobcontainer1";
 module.exports = async function (context, myBlobXML) {
     //context.log("JavaScript blob XML trigger function processed blob \n Blob:", context.bindingData.blobTrigger);
 
-    context.log("Creating metadata object about file and copy flow... ");
+    context.log("Creating metadata object about file and copy flow 123... ");
 
     getBlobNameAndPath(context.bindingData.blobTrigger.toString());
     var newGuid = commonCode.GetGUID();
